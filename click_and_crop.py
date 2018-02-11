@@ -2,6 +2,7 @@
 # python click_and_crop.py --image jurassic_park_kitchen.jpg
 
 # import the necessary packages
+import object_size
 import argparse
 import cv2
 
@@ -58,10 +59,13 @@ while True:
 		break
 
 # if there are two reference points, then crop the region of interest
-# from teh image and display it
+# from the image and display it
 if len(refPt) == 2:
 	roi = clone[refPt[0][1]:refPt[1][1], refPt[0][0]:refPt[1][0]]
-	cv2.imshow("ROI", roi)
+	# print "show image"
+	# cv2.imshow("ROI", roi)
+	cv2.imwrite('tmp.tif', roi)
+	object_size.init("tmp.tif")
 	cv2.waitKey(0)
 
 # close all open windows
