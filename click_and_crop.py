@@ -34,12 +34,18 @@ def click_and_crop(event, x, y, flags, param):
 		cv2.imshow("image", image)
 
 # construct the argument parser and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, help="Path to the image")
-args = vars(ap.parse_args())
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--image", required=True, help="Path to the image")
+# ap.add_argument("-ppm", required=True, help="pixels per metric")
+# args = vars(ap.parse_args())
+# print args
+
+# files/image0010.tif
+image = raw_input('Enter your image path: ')
+ppm = input('Enter your pixels per metric: ')
 
 # load the image, clone it, and setup the mouse callback function
-image = cv2.imread(args["image"])
+image = cv2.imread(image)
 clone = image.copy()
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", click_and_crop)
@@ -65,7 +71,7 @@ if len(refPt) == 2:
 	# print "show image"
 	# cv2.imshow("ROI", roi)
 	cv2.imwrite('tmp.tif', roi)
-	object_size.init("tmp.tif")
+	object_size.init("tmp.tif", ppm)
 	cv2.waitKey(0)
 
 # close all open windows

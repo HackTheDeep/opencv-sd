@@ -10,7 +10,7 @@ import cv2
 def midpoint(ptA, ptB):
 	return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-def init(path):
+def init(path, ppm):
 	# construct the argument parse and parse the arguments
 	# ap = argparse.ArgumentParser()
 	# ap.add_argument("-i", "--image", required=True, help="path to the input image")
@@ -35,7 +35,7 @@ def init(path):
 	# sort the contours from left-to-right and initialize the
 	# 'pixels per metric' calibration variable
 	(cnts, _) = contours.sort_contours(cnts)
-	pixelsPerMetric = None
+	# pixelsPerMetric = None
 
 	# loop over the contours individually
 	for c in cnts:
@@ -80,15 +80,15 @@ def init(path):
 
 		# draw lines between the midpoints
 		cv2.line(orig, (int(tltrX), int(tltrY)), (int(blbrX), int(blbrY)),
-			(255, 0, 255), 2)
+			(255, 0, 255), 1)
 		cv2.line(orig, (int(tlblX), int(tlblY)), (int(trbrX), int(trbrY)),
-			(255, 0, 255), 2)
+			(255, 0, 255), 1)
 
 		# compute the Euclidean distance between the midpoints
 		dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
 		dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
-		print dA
-		print dB
+		print dA/ppm
+		print dB/ppm
 
 		# if the pixels per metric has not been initialized, then
 		# compute it as the ratio of pixels to supplied metric
@@ -97,16 +97,16 @@ def init(path):
 		# 	pixelsPerMetric = dB / args["width"]
 
 		# compute the size of the object
-		dimA = dA
-		dimB = dB
+		dimA = dA/ppm
+		dimB = dB/ppm
 	
 		# draw the object sizes on the image
-		cv2.putText(orig, "{:.1f}px".format(dimA),
-			(int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
-			0.65, (255, 255, 255), 2)
-		cv2.putText(orig, "{:.1f}px".format(dimB),
-			(int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
-			0.65, (255, 255, 255), 2)
+		cv2.putText(orig, "{:.1f} um".format(dimA),
+			(int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_PLAIN,
+			1, (255, 255, 255), 1)
+		cv2.putText(orig, "{:.1f} um".format(dimB),
+			(int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_PLAIN,
+			1, (255, 255, 255), 1)
 	
 		# show the output image
 		cv2.imshow("Image", orig)
